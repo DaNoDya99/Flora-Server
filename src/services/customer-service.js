@@ -15,7 +15,7 @@ class CustomerService {
 
     const hashedPassword = await bcrypt.hash(customer.password, 10);
 
-    Customer.create(
+    return await Customer.create(
         {
             firstName: customer.firstName,
             lastName: customer.lastName,

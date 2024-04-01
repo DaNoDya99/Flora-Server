@@ -1,14 +1,12 @@
 const CustomerService = require('../services/customer-service');
+const {custom} = require("joi");
 
 class CustomerController {
     async registerCustomer(req, res, next) {
         try {
             const customer = req.body;
-            CustomerService.registerCustomer(customer).then((newCustomer) => {
-                res.status(201).json({ status: "success", message: "Customer registered successfully", customer: newCustomer });
-            }).catch((error) => {
-                res.status(400).json({ message: error.message });
-            });
+            const response = await CustomerService.registerCustomer(customer);
+            res.status(201).json({ status : "success", message : "Customer registered successfully", customer : response})
         } catch (error) {
             res.status(400).json({ message: error.message });
         }
@@ -21,7 +19,7 @@ class CustomerController {
             console.log(customer);
             res.status(200).json({ status: "success", message: "Customer logged in successfully", customer: customer });
         }catch (error) {
-            res.status(400).json({ message: error.message });
+            res.status(400).json({ status : "failed", message: error.message });
         }
     }
 
