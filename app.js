@@ -7,6 +7,7 @@ const routes = require('./src/routes')
 const app = express()
 const port = 3000
 
+app.use('/public',express.static(__dirname + '/public'));
 app.use(cors())
 app.use(bodyParser.json());
 app.use(express.json())
