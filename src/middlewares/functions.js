@@ -1,5 +1,5 @@
 export default {
     generateIds: (prefix) => {
-        return prefix + Math.random().toString(36).substr(2, 9);
+        return prefix + '-' + Math.floor(1000+Math.random()*9000)+'-'+Math.floor(1000+Math.random()*9000)+'-'+Math.floor(1000+Math.random()*9000);
     }
 }
