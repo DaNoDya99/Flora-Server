@@ -5,10 +5,26 @@ class BouquetController{
         try{
             const bouquet = req.body;
             bouquet.images = req.files;
-            console.log(bouquet);
             const newBouquet = await BouquetService.addBouquet(bouquet);
-            // res.json(newBouquet);
+            if(newBouquet){
+                res.status(201).json({ status: "success", message: "Bouquet Added Successfully"});
+            }else{
+                res.status(500).json({ status: "success", message: "An error occurred"});
+            }
         } catch(e){
+            res.status(500).json(e.message);
+        }
+    }
+
+    async getBouquets(req,res) {
+        try{
+            const bouquets = await BouquetService.getBouquets();
+            if(bouquets){
+                res.status(200).json({ status: "success", message: "Bouquets fetched successfully", bouquets: bouquets});
+            }else{
+                res.status(500).json({ status: "success", message: "An error occurred", bouquets: []})
+            }
+        }catch (e){
             res.status(500).json(e.message);
         }
     }
