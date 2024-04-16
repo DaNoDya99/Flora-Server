@@ -74,6 +74,26 @@ class EmployeeService {
               throw new Error(error.message);
          });
     }
+
+    async login(credentials) {
+        const employee = await Employee.findOne({where: {email: credentials.email}}).then((employee) => {
+            return employee;
+        }).catch((error) => {
+            return null;
+        });
+
+        if (!employee) {
+            throw new Error("Employee not found");
+        }
+
+        const isPasswordValid = await bcrypt.compare(credentials.password, employee.password);
+
+        if (!isPasswordValid) {
+            throw new Error("Invalid password");
+        }
+
+        return employee;
+    }
 }
 
 module.exports = new EmployeeService();

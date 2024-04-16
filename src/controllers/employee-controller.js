@@ -33,6 +33,16 @@ class EmployeeController {
             res.status(400).json({ status : "failed", message: error.message });
         }
     }
+
+    async login(req, res, next) {
+        try {
+            const credentials = req.body;
+            const response = await EmployeeService.login(credentials);
+            res.status(200).json({ status: "success", message: "Login successful", employee: response });
+        } catch (error) {
+            res.status(400).json({ status: "failed", message: error.message });
+        }
+    }
 }
 
 module.exports = new EmployeeController();

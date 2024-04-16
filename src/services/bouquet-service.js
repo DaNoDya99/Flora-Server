@@ -1,34 +1,22 @@
 const generateId = require('../middlewares/functions');
-const Bouquets = require('../models/bouquets');
-const BouquetImages = require('../models/bouquet_images');
-const BouquetFlowers = require('../models/bouquet_flowers');
+const {Bouquets} = require('../models');
+const {Bouquet_images} = require('../models');
+const {Bouquet_flowers} = require('../models');
 
 class BouquetService{
     async addBouquet(bouquet){
         let Id = generateId.generateIds('BOUQ');
-        while(true){
-            const bouquet = await Bouquets.findOne({where : {product_code : Id}});
-            if(bouquet){
-                Id = generateId.generateIds('BOUQ');
-            }else{
-                break;
-            }
-        }
 
-        const newBouquet = await Bouquets.create({
+        const bouquetObj = {
             product_code : Id,
-            name : bouquet.name,
+            name : bouquet.productName,
             quantity : bouquet.quantity,
-            reorder_level : bouquet.reorder_level,
+            reorder_level : bouquet.reorderLevel,
             category : bouquet.category,
             sub_category : bouquet.sub_category,
             price : bouquet.price,
             description : bouquet.description,
-        }).then((response) => {
-            return true;
-        }).catch((error) => {
-            return false;
-        })
+        }
 
         let image_list = []
 
@@ -39,33 +27,30 @@ class BouquetService{
             })
         }
 
-        const newBouquetImages = await BouquetImages().bulkCreate(image_list).then((response) => {
-            return true;
-        }).catch((error) => {
-            return false
-        })
-
         let flowers_list = []
 
-        if(bouquet.lilies){
+        if(bouquet.lilies === 'true'){
             flowers_list.push({
                 product_code: Id,
                 flower_type : 1,
                 quantity : bouquet.liliesQuantity
             })
-        }else if(bouquet.chrysanthemums){
+        }
+        if(bouquet.chrysanthemums === 'true'){
             flowers_list.push({
                 product_code: Id,
                 flower_type : 2,
                 quantity : bouquet.chrysanthemumsQuantity
             })
-        }else if(bouquet.roses){
+        }
+        if(bouquet.roses === 'true'){
             flowers_list.push({
                 product_code: Id,
                 flower_type : 3,
                 quantity : bouquet.rosesQuantity
             })
-        }else if(bouquet.gerbera){
+        }
+        if(bouquet.gerbera === 'true'){
             flowers_list.push({
                 product_code: Id,
                 flower_type : 4,
@@ -73,17 +58,65 @@ class BouquetService{
             })
         }
 
-        const newBouquetFlowers = await BouquetFlowers().bulkCreate(flowers_list).then((response) => {
-            return true;
+        const newBouquet = await Bouquets.create(bouquetObj).then((bouquet) => {
+            return bouquet;
         }).catch((error) => {
-            return false;
-        })
+            return null;
+        });
 
-        return newBouquet && newBouquetImages && newBouquetFlowers;
+        const newImages = await Bouquet_images.bulkCreate(image_list).then((images) => {
+            return images;
+        }).catch((error) => {
+            return null;
+        });
+
+        const newFlowers = await Bouquet_flowers.bulkCreate(flowers_list).then((flowers) => {
+            return flowers;
+        }).catch((error) => {
+            return null;
+        });
+
+        return !!(newBouquet && newImages && newFlowers);
     }
 
     async getBouquets(){
-        return true
+        const bouquets = await Bouquets.findAll().then((bouquets) => {
+            return bouquets;
+        }).catch((error) => {
+            return null;
+        })
+
+        if(bouquets){
+            for (let bouquet in bouquets){
+                const images = await Bouquet_images.findAll({
+                    where: {
+                        product_code: bouquets[bouquet].dataValues.product_code
+                    }
+                }).then((images) => {
+                    return images;
+                }).catch((error) => {
+                    return null;
+                });
+
+                const flowers = await Bouquet_flowers.findAll({
+                    where: {
+                        product_code: bouquets[bouquet].dataValues.product_code
+                    }
+                }).then((flowers) => {
+                    return flowers;
+                }).catch((error) => {
+                    return null;
+                });
+
+                bouquets[bouquet].dataValues.images = images;
+                bouquets[bouquet].dataValues.flowers = flowers;
+
+            }
+
+            return bouquets;
+        }else{
+            return null;
+        }
     }
 }
 
