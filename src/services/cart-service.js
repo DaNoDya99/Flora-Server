@@ -1,4 +1,7 @@
 const {Cart} = require('../models');
+const {Bouquets} = require('../models');
+const {Bouquet_images} = require('../models');
+const {Bouquet_flowers} = require('../models');
 
 class CartService{
     async addItemToCart(item){
@@ -47,6 +50,20 @@ class CartService{
                 bouquet.dataValues.quantity = cartDetails[item].dataValues.quantity;
                 bouquetList.push(bouquet);
             }
+
+            for (let bouquet in bouquetList){
+                bouquetList[bouquet].dataValues.images = await Bouquet_images.findAll({
+                    where: {
+                        product_code: bouquetList[bouquet].dataValues.product_code
+                    }
+                }).then((images) => {
+                    return images;
+                }).catch((error) => {
+                    return null;
+                });
+            }
+
+            return bouquetList;
         } catch (error) {
             return null;
         }
