@@ -210,6 +210,20 @@ class OrderServices {
             throw new Error(error);
         });
     }
+
+    async updateOrderStatus(order) {
+        return await Orders.update({
+            order_status: order.order_status
+        }, {
+            where: {
+                order_id: order.order_id
+            }
+        }).then(() => {
+            return true;
+        }).catch(error => {
+            throw new Error(error);
+        });
+    }
 }
 
 module.exports = new OrderServices();

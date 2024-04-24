@@ -9,5 +9,6 @@ router.get('/get-orders', OrderController.getAllOrders);
 router.get('/get-order/:id', OrderController.getOrderById);
 router.get('/get-pending-order_counts-groupedby-city', OrderController.getOrderPendingOrderCountsGroupedByCity);
 router.post('/assign-delivery-person', OrderController.assignDeliveryPerson);
+router.post('/update-order-status', OrderController.updateOrderStatus);
 
 module.exports = router;

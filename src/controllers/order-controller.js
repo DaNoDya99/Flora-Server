@@ -96,6 +96,20 @@ class OrderController {
             res.status(400).json({ message: error.message });
         }
     }
+
+    async updateOrderStatus(req, res, next) {
+        try {
+            const order = req.body;
+            const response = await OrderService.updateOrderStatus(order);
+            if(response){
+                res.status(200).json({ status : "success", message : "Order status updated successfully"})
+            }else {
+                res.status(400).json({ status : "failed", message : "Order status update failed" });
+            }
+        } catch (error) {
+            res.status(400).json({ message: error.message });
+        }
+    }
 }
 
 module.exports = new OrderController();
