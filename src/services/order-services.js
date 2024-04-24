@@ -3,6 +3,7 @@ const {Order_items} = require('../models');
 const {Cart} = require('../models');
 const {Bouquets} = require('../models');
 const functions = require('../middlewares/functions');
+const sequelize = require("sequelize");
 
 class OrderServices {
   async placeOrder(order) {
@@ -83,7 +84,7 @@ class OrderServices {
     async getOrders(customer) {
       const orders = await Orders.findAll({
           where: {
-            customer: customer
+            customer: parseInt(customer)
           }
         }).then(orders => {
           return orders;
@@ -92,14 +93,14 @@ class OrderServices {
         });
 
         for(let i = 0; i < orders.length; i++){
-          orders[i].order_items = await Order_items.findAll({
-              where: {
-                order_id: orders[i].order_id
-              }
+            orders[i].dataValues.order_items = await Order_items.findAll({
+                where: {
+                    order_id: orders[i].order_id
+                }
             }).then(orderItems => {
-              return orderItems;
+                return orderItems;
             }).catch(error => {
-              throw new Error(error);
+                throw new Error(error);
             });
         }
 
@@ -109,7 +110,8 @@ class OrderServices {
     async getOrdersByStatus(status) {
       const orders = await Orders.findAll({
           where: {
-            order_status: status
+            order_status: status,
+              delivery_method: 'delivery'
           }
         }).then(orders => {
           return orders;
@@ -118,9 +120,9 @@ class OrderServices {
         });
 
         for(let i = 0; i < orders.length; i++){
-            orders[i].order_items = await Order_items.findAll({
+            orders[i].dataValues.order_items = await Order_items.findAll({
                 where: {
-                    order_id: orders[i].order_id
+                    order_id: orders[i].order_id,
                 }
                 }).then(orderItems => {
                   return orderItems;
@@ -178,6 +180,35 @@ class OrderServices {
         }
 
         return order;
+    }
+
+    async getOrderPendingOrderCountsGroupedByCity() {
+        return await Orders.findAll({
+                where: {
+                    order_status: 'pending'
+                },
+                attributes: ['recipient_city', [sequelize.fn('COUNT', 'recipient_city'), 'order_count']],
+                group: ['recipient_city']
+            }).then(orderCounts => {
+                return orderCounts;
+            }).catch(error => {
+                throw new Error(error);
+            });
+    }
+
+    async assignDeliveryPerson(deliveryPerson) {
+        return await Orders.update({
+            delivery_person: deliveryPerson.deliveryPerson,
+            order_status: 'processing'
+        }, {
+            where: {
+                recipient_city: deliveryPerson.city
+            }
+        }).then(() => {
+            return true;
+        }).catch(error => {
+            throw new Error(error);
+        });
     }
 }
 

@@ -18,6 +18,10 @@ module.exports = (sequelize, DataTypes) => {
         Orders.hasMany(models.Order_items, {
             foreignKey: 'order_id',
         });
+
+        Orders.belongsTo(models.Employee, {
+            foreignKey: 'delivery_person',
+        });
     }
   }
   Orders.init({
@@ -34,7 +38,8 @@ module.exports = (sequelize, DataTypes) => {
     order_status: DataTypes.ENUM('pending','processing','dispatched','delivered'),
     delivery_method: DataTypes.ENUM('pickup','delivery'),
     delivery_date: DataTypes.DATEONLY,
-    payment_method: DataTypes.ENUM('card','cash')
+    payment_method: DataTypes.ENUM('card','cash'),
+    delivery_person: DataTypes.INTEGER,
   }, {
     sequelize,
     timestamps: false,

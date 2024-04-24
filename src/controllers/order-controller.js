@@ -69,6 +69,33 @@ class OrderController {
             res.status(400).json({ message: error.message });
         }
     }
+
+    async getOrderPendingOrderCountsGroupedByCity(req, res, next) {
+        try {
+            const orderCounts = await OrderService.getOrderPendingOrderCountsGroupedByCity();
+            if(orderCounts){
+                res.status(200).json(orderCounts);
+            }else{
+                res.status(404).json({ message: "No orders found" });
+            }
+        } catch (error) {
+            res.status(400).json({ message: error.message });
+        }
+    }
+
+    async assignDeliveryPerson(req, res, next) {
+        try {
+            const deliveryPerson = req.body;
+            const response = await OrderService.assignDeliveryPerson(deliveryPerson);
+            if(response){
+                res.status(200).json({ status : "success", message : "Delivery person assigned successfully"})
+            }else {
+                res.status(400).json({ status : "failed", message : "Delivery person assignment failed" });
+            }
+        } catch (error) {
+            res.status(400).json({ message: error.message });
+        }
+    }
 }
 
 module.exports = new OrderController();

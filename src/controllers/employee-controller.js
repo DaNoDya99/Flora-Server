@@ -43,6 +43,24 @@ class EmployeeController {
             res.status(400).json({ status: "failed", message: error.message });
         }
     }
+
+    async getDeliveryPersonnel(req, res, next) {
+        try {
+            const employees = await EmployeeService.getDeliveryPersonnel();
+            res.status(200).json({ status: "success", message: "Delivery personnel fetched successfully", employees: employees });
+        }catch (error) {
+            res.status(400).json({ status : "failed", message: error.message });
+        }
+    }
+
+    async getDeliveryPersonnelAssignedOrderCounts(req, res, next) {
+        try {
+            const employees = await EmployeeService.getDeliveryPersonnelAssignedOrderCounts();
+            res.status(200).json({ status: "success", message: "Delivery personnel fetched successfully", employees: employees });
+        }catch (error) {
+            res.status(400).json({ status : "failed", message: error.message });
+        }
+    }
 }
 
 module.exports = new EmployeeController();

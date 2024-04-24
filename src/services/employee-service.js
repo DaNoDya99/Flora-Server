@@ -1,5 +1,7 @@
 const bcrypt = require('bcrypt');
 const { Employee } = require('../models');
+const { Orders } = require('../models');
+const {Op} = require("sequelize");
 
 class EmployeeService {
     async addEmployee(employee) {
@@ -93,6 +95,32 @@ class EmployeeService {
         }
 
         return employee;
+    }
+
+    async getDeliveryPersonnel() {
+        return await Employee.findAll({where: {role: 'delivery'}}).then((employees) => {
+            return employees;
+        }).catch((error) => {
+            throw new Error(error.message);
+        });
+    }
+
+    async getDeliveryPersonnelAssignedOrderCounts() {
+        const employees = await Employee.findAll({where: {role: 'delivery'}}).then((employees) => {
+            return employees;
+        }).catch((error) => {
+            throw new Error(error.message);
+        });
+        // Delivery status should not be delivered
+        for(let i = 0; i < employees.length; i++){
+            employees[i].dataValues.orderCount = await Orders.count({where: {delivery_person: employees[i].id, delivery_method: 'delivery', order_status: { [Op.ne]: 'delivered' }}}).then((count) => {
+                return count;
+            }).catch((error) => {
+                throw new Error(error.message);
+            });
+        }
+
+        return employees;
     }
 }
 

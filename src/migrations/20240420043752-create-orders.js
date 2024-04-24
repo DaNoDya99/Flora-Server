@@ -50,7 +50,11 @@ module.exports = {
       },
       payment_method: {
         type: Sequelize.ENUM('card','cash')
-      }
+      },
+      delivery_person: {
+        type: Sequelize.INTEGER,
+        allowNull: true
+      },
     });
   },
   async down(queryInterface, Sequelize) {

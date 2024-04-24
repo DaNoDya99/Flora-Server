@@ -8,5 +8,7 @@ router.route('/add').post(upload.single('profilePicture'), EmployeeController.ad
 router.route('/get-employees').get(EmployeeController.getEmployees);
 router.route('/update').put(upload.single('image'), EmployeeController.updateEmployee);
 router.route('/login').post(EmployeeController.login)
+router.route('/get-delivery-personnel').get(EmployeeController.getDeliveryPersonnel);
+router.route('/get-delivery-personnel-assigned-order-counts').get(EmployeeController.getDeliveryPersonnelAssignedOrderCounts);
 
 module.exports = router;
