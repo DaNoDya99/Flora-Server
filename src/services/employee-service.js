@@ -2,6 +2,8 @@ const bcrypt = require('bcrypt');
 const { Employee } = require('../models');
 const { Orders } = require('../models');
 const {Op} = require("sequelize");
+const {join} = require("path");
+const {unlink} = require("fs");
 
 class EmployeeService {
     async addEmployee(employee) {
@@ -121,6 +123,31 @@ class EmployeeService {
         }
 
         return employees;
+    }
+
+    async deleteEmployee(employeeId) {
+        const employee = await Employee.findOne({where: {id: employeeId}}).then((employee) => {
+            return employee;
+        }).catch((error) => {
+            return null;
+        });
+
+        if (!employee) {
+            throw new Error("Employee not found");
+        }
+        
+        unlink(employee.image, (error) => {
+            if (error) {
+                throw new Error(error.message);
+            }
+        });
+
+        return await Employee.destroy({where: {id: employeeId}}).then((deletedEmployee) => {
+            return deletedEmployee;
+        }).catch((error) => {
+            throw new Error(error.message);
+        });
+
     }
 }
 

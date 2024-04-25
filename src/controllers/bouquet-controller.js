@@ -28,6 +28,20 @@ class BouquetController{
             res.status(500).json(e.message);
         }
     }
+
+    async removeBouquet(req, res){
+        try{
+            const bouquetId = req.params.id;
+            const deletedBouquet = await BouquetService.removeBouquet(bouquetId);
+            if(deletedBouquet){
+                res.status(200).json({ status: "success", message: "Bouquet deleted successfully"});
+            }else{
+                res.status(500).json({ status: "success", message: "An error occurred"});
+            }
+        } catch(e){
+            res.status(500).json(e.message);
+        }
+    }
 }
 
 module.exports = new BouquetController();

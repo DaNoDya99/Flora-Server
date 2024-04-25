@@ -2,6 +2,7 @@ const generateId = require('../middlewares/functions');
 const {Bouquets} = require('../models');
 const {Bouquet_images} = require('../models');
 const {Bouquet_flowers} = require('../models');
+const {unlink} = require("fs");
 
 class BouquetService{
     async addBouquet(bouquet){
@@ -117,6 +118,60 @@ class BouquetService{
         }else{
             return null;
         }
+    }
+
+    async removeBouquet(bouquetId){
+        const images = await Bouquet_images.findAll({
+            where: {
+                product_code: bouquetId
+            }
+        }).then((images) => {
+            return images;
+        }).catch((error) => {
+            return null;
+        });
+
+        if(images){
+            for(let image in images){
+                unlink(images[image].dataValues.image_path, (err) => {
+                    if(err){
+                        return false;
+                    }
+                });
+            }
+        }
+
+        const removedImages = await Bouquet_images.destroy({
+            where: {
+                product_code: bouquetId
+            }
+        }).then((images) => {
+            return images;
+        }).catch((error) => {
+            return null;
+        });
+
+        const removedFlowers = await Bouquet_flowers.destroy({
+            where: {
+                product_code: bouquetId
+            }
+        }).then((flowers) => {
+            return flowers;
+        }).catch((error) => {
+            return null;
+        });
+
+        const removedBouquet = await Bouquets.destroy({
+            where: {
+                product_code: bouquetId
+            }
+        }).then((bouquet) => {
+            return bouquet;
+        }).catch((error) => {
+            return null;
+        });
+
+        return !!(removedImages && removedFlowers && removedBouquet);
     }
 }
 

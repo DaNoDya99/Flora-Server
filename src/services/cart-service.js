@@ -68,6 +68,24 @@ class CartService{
             return null;
         }
     }
+
+    async removeItemFromCart(item){
+        // Remove item from cart
+        try {
+            return await Cart.destroy({
+                where: {
+                    product_code: item.product_code,
+                    customer: item.customer
+                }
+            }).then((cart) => {
+                return cart;
+            }).catch((error) => {
+                return null;
+            });
+        } catch (error) {
+            return null;
+        }
+    }
 }
 
 module.exports = new CartService();

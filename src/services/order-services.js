@@ -85,7 +85,10 @@ class OrderServices {
       const orders = await Orders.findAll({
           where: {
             customer: parseInt(customer)
-          }
+          },
+            order: [
+                ['delivery_date', 'DESC']
+            ]
         }).then(orders => {
           return orders;
         }).catch(error => {

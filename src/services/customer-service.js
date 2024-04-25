@@ -48,6 +48,35 @@ class CustomerService {
           throw new Error(error.message);
       }
   }
+
+    async updateCustomer(customer) {
+        try {
+            const customerExists = await Customer.findOne({ where: { id: customer.id } });
+
+            if (!customerExists) {
+                throw new Error("Customer not found");
+            }
+
+            await Customer.update(
+                {
+                    firstName: customer.firstName,
+                    lastName: customer.lastName,
+                    email: customer.email,
+                },
+                {
+                    where: { id: customer.id }
+                }
+            );
+
+            return await Customer.findOne({ where: { email: customer.email } }).then((updatedCustomer) => {
+                return updatedCustomer;
+            }).catch((error) => {
+                throw new Error(error.message);
+            });
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
 }
 
 module.exports = new CustomerService();

@@ -31,6 +31,22 @@ class CartController {
             });
         }
     }
+
+    async removeItemFromCart(req, res) {
+        const item = req.body;
+        const cart = await CartService.removeItemFromCart(item);
+        if (cart) {
+            res.status(200).json({
+                status : 'success',
+                message: 'Item removed from cart',
+                cart: cart
+            });
+        } else {
+            res.status(400).json({
+                message: 'Item not removed from cart'
+            });
+        }
+    }
 }
 
 module.exports = new CartController();

@@ -61,6 +61,16 @@ class EmployeeController {
             res.status(400).json({ status : "failed", message: error.message });
         }
     }
+
+    async deleteEmployee(req, res, next) {
+        try {
+            const employeeId = req.params.id;
+            const response = await EmployeeService.deleteEmployee(employeeId);
+            res.status(200).json({ status: "success", message: "Employee deleted successfully", employee: response });
+        }catch (error) {
+            res.status(400).json({ status : "failed", message: error.message });
+        }
+    }
 }
 
 module.exports = new EmployeeController();

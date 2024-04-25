@@ -10,5 +10,6 @@ router.route('/update').put(upload.single('image'), EmployeeController.updateEmp
 router.route('/login').post(EmployeeController.login)
 router.route('/get-delivery-personnel').get(EmployeeController.getDeliveryPersonnel);
 router.route('/get-delivery-personnel-assigned-order-counts').get(EmployeeController.getDeliveryPersonnelAssignedOrderCounts);
+router.route('/delete/:id').delete(EmployeeController.deleteEmployee);
 
 module.exports = router;

@@ -26,6 +26,16 @@ class CustomerController {
     async sayHello(req, res, next) {
         res.status(200).json({ message: "Hello" });
     }
+
+    async updateCustomer(req, res, next) {
+        try {
+            const customer = req.body;
+            const response = await CustomerService.updateCustomer(customer);
+            res.status(200).json({ status : "success", message : "Customer updated successfully", customer : response})
+        } catch (error) {
+            res.status(400).json({ message: error.message });
+        }
+    }
 }
 
 module.exports = new CustomerController();
