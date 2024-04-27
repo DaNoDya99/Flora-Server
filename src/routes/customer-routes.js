@@ -8,5 +8,6 @@ router.post('/register', validateCreateCustomer, CustomerController.registerCust
 router.post('/login', validateLoginCustomer, CustomerController.loginCustomer.bind(CustomerController));
 router.get('/hello', CustomerController.sayHello.bind(CustomerController));
 router.put('/update', CustomerController.updateCustomer.bind(CustomerController));
+router.put('/reset-password', CustomerController.resetPassword.bind(CustomerController));
 
 module.exports = router;

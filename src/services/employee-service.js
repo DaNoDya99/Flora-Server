@@ -67,9 +67,9 @@ class EmployeeService {
             age: employee.age,
             addressLine1: employee.address1,
             addressLine2: employee.address2,
-            addressLine3: employee.address3,
+            addressLine3: employee.address3 === undefined ? '' : employee.address3,
             city: employee.city,
-            image: employee.image.path
+            image: employee.image.path === undefined ? employee.image : employee.image.path,
        }
 
          return await Employee.update(emp, { where: { id: employee.id } }).then((updatedEmployee) => {

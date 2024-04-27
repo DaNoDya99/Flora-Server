@@ -40,6 +40,7 @@ module.exports = (sequelize, DataTypes) => {
     delivery_date: DataTypes.DATEONLY,
     payment_method: DataTypes.ENUM('card','cash'),
     delivery_person: DataTypes.INTEGER,
+    order_date: DataTypes.DATE
   }, {
     sequelize,
     timestamps: false,

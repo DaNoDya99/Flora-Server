@@ -77,6 +77,37 @@ class CustomerService {
             throw new Error(error.message);
         }
     }
+
+    async resetPassword(data) {
+        try {
+            const customer = await Customer.findOne({ where: { id: data.id } });
+
+            if (!customer) {
+                throw new Error("Customer not found");
+            }
+
+            const passwordMatch = await bcrypt.compare(data.currentPassword, customer.password);
+            if (!passwordMatch) {
+                throw new Error("Invalid password");
+            }
+
+            const hashedPassword = await bcrypt.hash(data.newPassword, 10);
+
+            await Customer.update(
+                {
+                    password: hashedPassword
+                },
+                {
+                    where: { id: data.id }
+                }
+            );
+
+            return await Customer.findOne({where: {id: data.id}});
+
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
 }
 
 module.exports = new CustomerService();

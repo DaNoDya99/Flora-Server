@@ -36,6 +36,16 @@ class CustomerController {
             res.status(400).json({ message: error.message });
         }
     }
+
+    async resetPassword(req, res, next) {
+        try {
+            const data = req.body;
+            const response = await CustomerService.resetPassword(data);
+            res.status(200).json({ status : "success", message : "Password reset successfully", customer : response})
+        } catch (error) {
+            res.status(400).json({ message: error.message });
+        }
+    }
 }
 
 module.exports = new CustomerController();

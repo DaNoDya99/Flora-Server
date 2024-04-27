@@ -55,6 +55,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: true
       },
+      order_date: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
     });
   },
   async down(queryInterface, Sequelize) {

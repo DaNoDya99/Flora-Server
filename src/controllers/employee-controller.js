@@ -25,7 +25,7 @@ class EmployeeController {
     async updateEmployee(req, res, next) {
         try {
             const employee = req.body;
-            employee.image = req.file;
+            employee.image = req.file === undefined ? employee.image : req.file;
             console.log(employee);
             const response = await EmployeeService.updateEmployee(employee);
             res.status(200).json({ status: "success", message: "Employee updated successfully", employee: response });
