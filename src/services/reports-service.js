@@ -10,8 +10,9 @@ const sequelize = require("sequelize");
 
 class ReportsService {
     async calculateTotalIncomeThisWeek() {
-        let weekStart = moment().startOf('week').toDate();
-        let weekEnd = moment().endOf('week').toDate();
+        let weekEnd = moment().clone().startOf('week').toDate();
+        let weekStart = moment().clone().subtract(7, 'days').toDate();
+
 
         const orders = await Orders.findAll({
             where: {
@@ -80,13 +81,13 @@ class ReportsService {
     }
 
     async topSellingBouquetsWithinTheWeek() {
-        let weekStart = moment().startOf('week').toDate();
-        let weekEnd = moment().endOf('week').toDate();
+        let weekEnd = moment().clone().startOf('week').toDate();
+        let weekStart = moment().clone().subtract(7, 'days').toDate();
 
         const orders = await Orders.findAll({
             where: {
                 order_date: {
-                    [Op.between]: [weekStart, weekEnd]
+                    [Op.between]: [weekStart,weekEnd]
                 }
             }
         });
@@ -144,10 +145,10 @@ class ReportsService {
     }
 
     async dailyIncomeThisWeekVsLastWeek() {
-        let lastWeekStart = moment().subtract(1, 'weeks').startOf('week').toDate();
-        let lastWeekEnd = moment().subtract(1, 'weeks').endOf('week').toDate();
-        let thisWeekStart = moment().startOf('week').toDate();
-        let thisWeekEnd = moment().endOf('week').toDate();
+        let thisWeekEnd = moment().clone().startOf('week').toDate();
+        let thisWeekStart = moment().clone().subtract(7, 'days').toDate();
+        let lastWeekEnd = moment().clone().subtract(7, 'days').startOf('week').toDate();
+        let lastWeekStart = moment().clone().subtract(14, 'days').startOf('week').toDate();
 
         const lastWeekOrders = await Orders.findAll({
             where: {

@@ -4,7 +4,7 @@ class ReportsController {
     async calculateTotalIncomeThisWeek(req, res, next) {
         try {
             const response = await ReportsService.calculateTotalIncomeThisWeek();
-            res.status(200).json({ status : "success", message : "Total income calculated successfully", totalIncome : response})
+            res.status(200).json({ status : "success", message : "Total income calculated successfully", totalIncome : response.totalIncome})
         } catch (error) {
             res.status(400).json({ message: error.message });
         }
@@ -13,7 +13,7 @@ class ReportsController {
     async numberOfOrdersYesterday(req, res, next) {
         try {
             const response = await ReportsService.numberOfOrdersYesterday();
-            res.status(200).json({ status : "success", message : "Number of orders per day calculated successfully", numberOfOrdersPerDay : response})
+            res.status(200).json({ status : "success", message : "Number of orders per day calculated successfully", numberOfOrdersPerDay : response.numberOfOrdersLastDay})
         } catch (error) {
             res.status(400).json({ message: error.message });
         }
@@ -22,7 +22,7 @@ class ReportsController {
     async numberOfPendingOrders(req, res, next) {
         try {
             const response = await ReportsService.numberOfPendingOrders();
-            res.status(200).json({ status : "success", message : "Number of pending orders calculated successfully", numberOfPendingOrders : response})
+            res.status(200).json({ status : "success", message : "Number of pending orders calculated successfully", numberOfPendingOrders : response.numberOfPendingOrders})
         } catch (error) {
             res.status(400).json({ message: error.message });
         }
@@ -31,7 +31,7 @@ class ReportsController {
     async numberOfOrdersDeliveredYesterday(req, res, next) {
         try {
             const response = await ReportsService.numberOfOrdersDeliveredYesterday();
-            res.status(200).json({ status : "success", message : "Number of orders delivered yesterday calculated successfully", numberOfOrdersDeliveredYesterday : response})
+            res.status(200).json({ status : "success", message : "Number of orders delivered yesterday calculated successfully", numberOfOrdersDeliveredYesterday : response.numberOfOrdersDeliveredYesterday})
         } catch (error) {
             res.status(400).json({ message: error.message });
         }
@@ -67,7 +67,7 @@ class ReportsController {
     async pendingDeliveriesCountForADeliveryPerson(req, res, next) {
         try {
             const response = await ReportsService.pendingDeliveriesCountForADeliveryPerson(req.params.id);
-            res.status(200).json({ status : "success", message : "Pending deliveries for a delivery person calculated successfully", pendingDeliveries : response})
+            res.status(200).json({ status : "success", message : "Pending deliveries for a delivery person calculated successfully", pendingDeliveries : response.pendingDeliveriesCount})
         } catch (error) {
             res.status(400).json({ message: error.message });
         }
@@ -76,7 +76,7 @@ class ReportsController {
     async completedDeliveriesCountForADeliveryPerson(req, res, next) {
         try {
             const response = await ReportsService.completedDeliveriesCountForADeliveryPerson(req.params.id);
-            res.status(200).json({ status : "success", message : "Completed deliveries for a delivery person calculated successfully", completedDeliveries : response})
+            res.status(200).json({ status : "success", message : "Completed deliveries for a delivery person calculated successfully", completedDeliveries : response.completedOrdersCount})
         } catch (error) {
             res.status(400).json({ message: error.message });
         }
@@ -85,7 +85,7 @@ class ReportsController {
     async failedDeliveriesCountForADeliveryPerson(req, res, next) {
         try {
             const response = await ReportsService.failedDeliveriesCountForADeliveryPerson(req.params.id);
-            res.status(200).json({ status : "success", message : "Failed deliveries for a delivery person calculated successfully", failedDeliveries : response})
+            res.status(200).json({ status : "success", message : "Failed deliveries for a delivery person calculated successfully", failedDeliveries : response.failedOrdersCount})
         } catch (error) {
             res.status(400).json({ message: error.message });
         }
@@ -94,7 +94,7 @@ class ReportsController {
     async overallDeliveryPerformance(req, res, next) {
         try {
             const response = await ReportsService.overallDeliveryPerformance(req.params.id);
-            res.status(200).json({ status : "success", message : "Overall delivery performance calculated successfully", deliveryPerformance : response})
+            res.status(200).json({ status : "success", message : "Overall delivery performance calculated successfully", deliveryPerformance : response.deliveryPerformance})
         } catch (error) {
             res.status(400).json({ message: error.message });
         }

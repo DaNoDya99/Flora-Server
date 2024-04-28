@@ -16,5 +16,6 @@ router.get('/failed-delivery-orders/:id', ReportsController.failedDeliveriesCoun
 router.get('/overall-delivery-performance/:id', ReportsController.overallDeliveryPerformance.bind(ReportsController));
 router.get('/failed-delivery-details/:id', ReportsController.deliveryFailureDetails.bind(ReportsController));
 router.get('/order-count-delivered/:id', ReportsController.countOrdersDeliveredWithinTheWeek.bind(ReportsController));
+router.get('/order-count-delivered-by-each', ReportsController.countOrdersDeliveredByEachDeliveryPerson.bind(ReportsController));
 
 module.exports = router;
