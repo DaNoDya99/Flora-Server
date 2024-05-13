@@ -10,8 +10,12 @@ const sequelize = require("sequelize");
 
 class ReportsService {
     async calculateTotalIncomeThisWeek() {
-        let weekEnd = moment().clone().startOf('week').toDate();
-        let weekStart = moment().clone().subtract(7, 'days').toDate();
+        let weekEnd = new Date();
+        let weekStart = new Date();
+        weekStart.setDate(weekStart.getDate() - 7);
+
+        weekStart= moment(weekStart).format('YYYY-MM-DD');
+        weekEnd= moment(weekEnd).format('YYYY-MM-DD');
 
 
         const orders = await Orders.findAll({
@@ -31,6 +35,7 @@ class ReportsService {
         return {
             totalIncome: totalIncome
         }
+
     }
 
     async numberOfOrdersYesterday() {
@@ -81,8 +86,12 @@ class ReportsService {
     }
 
     async topSellingBouquetsWithinTheWeek() {
-        let weekEnd = moment().clone().startOf('week').toDate();
-        let weekStart = moment().clone().subtract(7, 'days').toDate();
+        let weekEnd = new Date();
+        let weekStart = new Date();
+        weekStart.setDate(weekStart.getDate() - 7);
+
+        weekStart= moment(weekStart).format('YYYY-MM-DD');
+        weekEnd= moment(weekEnd).format('YYYY-MM-DD');
 
         const orders = await Orders.findAll({
             where: {
@@ -131,7 +140,17 @@ class ReportsService {
             return b.quantity - a.quantity;
         });
 
-        return topSellingBouquets;
+        let response = {
+            products : [],
+            quantity: []
+        }
+
+        for(let i = 0; i < topSellingBouquets.length; i++){
+            response.products.push(topSellingBouquets[i].bouquet_name);
+            response.quantity.push(topSellingBouquets[i].quantity);
+        }
+
+        return response;
     }
 
     async lowQuantityProducts() {
@@ -145,10 +164,20 @@ class ReportsService {
     }
 
     async dailyIncomeThisWeekVsLastWeek() {
-        let thisWeekEnd = moment().clone().startOf('week').toDate();
-        let thisWeekStart = moment().clone().subtract(7, 'days').toDate();
-        let lastWeekEnd = moment().clone().subtract(7, 'days').startOf('week').toDate();
-        let lastWeekStart = moment().clone().subtract(14, 'days').startOf('week').toDate();
+        let thisWeekEnd = new Date();
+        let thisWeekStart = new Date();
+        thisWeekStart.setDate(thisWeekStart.getDate() - 7);
+
+        thisWeekStart= moment(thisWeekStart).format('YYYY-MM-DD');
+        thisWeekEnd= moment(thisWeekEnd).format('YYYY-MM-DD');
+
+        let lastWeekEnd = new Date();
+        let lastWeekStart = new Date();
+        lastWeekStart.setDate(lastWeekStart.getDate() - 14);
+        lastWeekEnd.setDate(lastWeekEnd.getDate() - 7);
+
+        lastWeekStart= moment(lastWeekStart).format('YYYY-MM-DD');
+        lastWeekEnd= moment(lastWeekEnd).format('YYYY-MM-DD');
 
         const lastWeekOrders = await Orders.findAll({
             where: {
@@ -276,8 +305,12 @@ class ReportsService {
     }
 
     async countOrdersDeliveredWithinTheWeek(id) {
-        let weekStart = moment().startOf('week').toDate();
-        let weekEnd = moment().endOf('week').toDate();
+        let weekEnd = new Date();
+        let weekStart = new Date();
+        weekStart.setDate(weekStart.getDate() - 7);
+
+        weekStart= moment(weekStart).format('YYYY-MM-DD');
+        weekEnd= moment(weekEnd).format('YYYY-MM-DD');
 
         const orders = await Orders.findAll({
             where: {

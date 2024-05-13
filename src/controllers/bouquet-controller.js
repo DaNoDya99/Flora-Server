@@ -42,6 +42,21 @@ class BouquetController{
             res.status(500).json(e.message);
         }
     }
+
+    async updateBouquet(req, res){
+        try{
+            const bouquet = req.body;
+            bouquet.images = req.files;
+            const updatedBouquet = await BouquetService.updateBouquet(bouquet);
+            if(updatedBouquet){
+                res.status(200).json({ status: "success", message: "Bouquet Updated Successfully"});
+            }else{
+                res.status(500).json({ status: "success", message: "An error occurred"});
+            }
+        } catch(e){
+            res.status(500).json(e.message);
+        }
+    }
 }
 
 module.exports = new BouquetController();

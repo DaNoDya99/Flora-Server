@@ -173,6 +173,35 @@ class BouquetService{
 
         return !!(removedImages && removedFlowers && removedBouquet);
     }
+
+    async updateBouquet(bouquet){
+        const bouquetExists = await Bouquets.findOne({ where: { product_code: bouquet.product_code } });
+
+        if (!bouquetExists) {
+            throw new Error("Bouquet not found");
+        }
+
+        return await Bouquets.update(
+            {
+                name: bouquet.name,
+                quantity: bouquet.quantity,
+                reorder_level: bouquet.reorderLevel,
+                category: bouquet.category,
+                sub_category: bouquet.sub_category,
+                price: bouquet.price,
+                description: bouquet.description,
+            },
+            {
+                where: {
+                    product_code: bouquet.product_code
+                }
+            }
+        ).then((updatedBouquet) => {
+            return updatedBouquet;
+        }).catch((error) => {
+            throw new Error(error.message);
+        });
+    }
 }
 
 module.exports = new BouquetService();
