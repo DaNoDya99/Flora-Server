@@ -57,6 +57,19 @@ class BouquetController{
             res.status(500).json(e.message);
         }
     }
+
+    async getBouquetsByCategory(req,res) {
+        try{
+            const bouquets = await BouquetService.getBouquetsByCategory(req.params.category);
+            if(bouquets){
+                res.status(200).json({ status: "success", message: "Bouquets fetched successfully", bouquets: bouquets});
+            }else{
+                res.status(500).json({ status: "success", message: "An error occurred", bouquets: []})
+            }
+        }catch (e){
+            res.status(500).json(e.message);
+        }
+    }
 }
 
 module.exports = new BouquetController();

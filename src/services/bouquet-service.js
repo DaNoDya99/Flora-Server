@@ -202,6 +202,50 @@ class BouquetService{
             throw new Error(error.message);
         });
     }
+
+    async getBouquetsByCategory(category){
+        const bouquets = await Bouquets.findAll({
+            where: {
+                category: category
+            }
+        }).then((bouquets) => {
+            return bouquets;
+        }).catch((error) => {
+            return null;
+        })
+
+        if(bouquets){
+            for (let bouquet in bouquets){
+                const images = await Bouquet_images.findAll({
+                    where: {
+                        product_code: bouquets[bouquet].dataValues.product_code
+                    }
+                }).then((images) => {
+                    return images;
+                }).catch((error) => {
+                    return null;
+                });
+
+                const flowers = await Bouquet_flowers.findAll({
+                    where: {
+                        product_code: bouquets[bouquet].dataValues.product_code
+                    }
+                }).then((flowers) => {
+                    return flowers;
+                }).catch((error) => {
+                    return null;
+                });
+
+                bouquets[bouquet].dataValues.images = images;
+                bouquets[bouquet].dataValues.flowers = flowers;
+
+            }
+
+            return bouquets;
+        }else{
+            return null;
+        }
+    }
 }
 
 module.exports = new BouquetService();

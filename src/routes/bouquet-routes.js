@@ -7,5 +7,6 @@ router.route('/add-bouquet').post(upload.array('images',5),BouquetController.add
 router.route('/get-bouquets').get(BouquetController.getBouquets);
 router.route('/remove-bouquet/:id').delete(BouquetController.removeBouquet);
 router.route('/update-bouquet').put(upload.array('images',5),BouquetController.updateBouquet);
+router.route('/get-bouquets-by-category/:category').get(BouquetController.getBouquetsByCategory);
 
 module.exports = router;
