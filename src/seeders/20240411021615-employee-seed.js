@@ -19,7 +19,7 @@ module.exports = {
     return queryInterface.bulkInsert('Employees',[{
       firstName : "Edward",
       lastName : "Samuel",
-      image : "public/uploads/images/1712463360643_.jpeg",
+      image : "public/uploads/images/1715686789335_.png",
       email : "edwardsam@gmail.com",
       password : hashedPassword,
       contact : "0766022644",
