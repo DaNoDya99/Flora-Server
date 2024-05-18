@@ -70,6 +70,19 @@ class BouquetController{
             res.status(500).json(e.message);
         }
     }
+
+    async getBouquetsByPriceRange(req,res) {
+        try{
+            const bouquets = await BouquetService.getBouquetsByPriceRange(req.params.minPrice, req.params.maxPrice, req.params.sub_category);
+            if(bouquets){
+                res.status(200).json({ status: "success", message: "Bouquets fetched successfully", bouquets: bouquets});
+            }else{
+                res.status(500).json({ status: "success", message: "An error occurred", bouquets: []})
+            }
+        }catch (e){
+            res.status(500).json(e.message);
+        }
+    }
 }
 
 module.exports = new BouquetController();

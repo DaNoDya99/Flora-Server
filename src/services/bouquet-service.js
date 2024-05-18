@@ -3,6 +3,7 @@ const {Bouquets} = require('../models');
 const {Bouquet_images} = require('../models');
 const {Bouquet_flowers} = require('../models');
 const {unlink} = require("fs");
+const {Op} = require("sequelize");
 
 class BouquetService{
     async addBouquet(bouquet){
@@ -213,6 +214,55 @@ class BouquetService{
         }).catch((error) => {
             return null;
         })
+
+        if(bouquets){
+            for (let bouquet in bouquets){
+                const images = await Bouquet_images.findAll({
+                    where: {
+                        product_code: bouquets[bouquet].dataValues.product_code
+                    }
+                }).then((images) => {
+                    return images;
+                }).catch((error) => {
+                    return null;
+                });
+
+                const flowers = await Bouquet_flowers.findAll({
+                    where: {
+                        product_code: bouquets[bouquet].dataValues.product_code
+                    }
+                }).then((flowers) => {
+                    return flowers;
+                }).catch((error) => {
+                    return null;
+                });
+
+                bouquets[bouquet].dataValues.images = images;
+                bouquets[bouquet].dataValues.flowers = flowers;
+
+            }
+
+            return bouquets;
+        }else{
+            return null;
+        }
+    }
+
+    async getBouquetsByPriceRange(minPrice, maxPrice, sub_category){
+        const allBouquets = await Bouquets.findAll({
+            where: {
+                sub_category: sub_category
+            }
+        }).then((bouquets) => {
+            return bouquets;
+        }).catch((error) => {
+            return null;
+        })
+
+        const bouquets = allBouquets.filter((bouquet) => {
+            return parseFloat(bouquet.dataValues.price.replace(/,/g, '')) >= parseFloat(minPrice) && parseFloat(bouquet.dataValues.price.replace(/,/g, '')) <= parseFloat(maxPrice);
+        })
+
 
         if(bouquets){
             for (let bouquet in bouquets){
